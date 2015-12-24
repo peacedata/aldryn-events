@@ -19,9 +19,6 @@ from cms.models import CMSPlugin
 from cms.models.fields import PlaceholderField
 from cms.utils.i18n import get_current_language, get_redirect_on_fallback
 
-from aldryn_translation_tools.models import (
-    TranslationHelperMixin, TranslatedAutoSlugifyMixin,
-)
 from aldryn_reversion.core import version_controlled_content
 from djangocms_text_ckeditor.fields import HTMLField
 from extended_choices import Choices
@@ -99,9 +96,7 @@ else:
 
 @python_2_unicode_compatible
 @version_controlled_content(follow=['event_coordinators', 'app_config'])
-class Event(TranslatedAutoSlugifyMixin,
-            TranslationHelperMixin,
-            TranslatableModel):
+class Event(TranslatableModel):
 
     slug_source_field_name = 'title'
 
@@ -281,14 +276,9 @@ class Event(TranslatedAutoSlugifyMixin,
             language = get_current_language()
 
         kwargs = {}
-        slug, slug_lang = self.known_translation_getter(
-            'slug', default=None, language_code=language)
+        slug = self.safe_translation_getter('slug', language_code=language)
 
         kwargs.update(slug=slug)
-        if slug and slug_lang:
-            site_id = getattr(settings, 'SITE_ID', None)
-            if get_redirect_on_fallback(language, site_id):
-                language = slug_lang
 
         if self.app_config_id and self.app_config.namespace:
             namespace = '{0}:'.format(self.app_config.namespace)

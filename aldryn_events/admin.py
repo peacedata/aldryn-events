@@ -16,7 +16,6 @@ except ImportError:
     TablibAdmin = None
 
 from parler.admin import TranslatableAdmin
-from aldryn_translation_tools.admin import AllTranslationsMixin
 
 from .cms_appconfig import EventsConfig
 from .models import Event, EventCoordinator, Registration
@@ -24,7 +23,6 @@ from .forms import EventAdminForm
 
 
 class EventAdmin(
-    AllTranslationsMixin,
     VersionedPlaceholderAdminMixin,
     FrontendEditableAdminMixin,
     PlaceholderAdminMixin,
@@ -90,7 +88,6 @@ class RegistrationAdmin(TablibAdmin if TablibAdmin is not None
 
 
 class EventConfigAdmin(VersionedPlaceholderAdminMixin,
-                       AllTranslationsMixin,
                        BaseAppHookConfig,
                        TranslatableAdmin):
     def get_config_fields(self):

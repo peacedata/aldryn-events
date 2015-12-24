@@ -37,8 +37,8 @@ module.exports = function (config) {
         files: [
             // these have to be specified in order since
             // dependency loading is not handled yet
-            '../../aldryn_events/boilerplates/bootstrap3/static/js/libs/*.js',
-            '../../aldryn_events/boilerplates/bootstrap3/static/js/addons/*.js',
+            '../../aldryn_events/static/js/libs/*.js',
+            '../../aldryn_events/static/js/addons/*.js',
 
             // tests themselves
             'frontend/unit/*.js',
