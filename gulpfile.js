@@ -22,7 +22,7 @@ var isTunnelCreated;
 // SETTINGS
 var PROJECT_ROOT = __dirname;
 var PROJECT_PATH = {
-    'js': PROJECT_ROOT + '/aldryn_events/boilerplates/bootstrap3/static/js/',
+    'js': PROJECT_ROOT + '/aldryn_events/static/js/',
     'tests': PROJECT_ROOT + '/aldryn_events/tests/frontend'
 };
 

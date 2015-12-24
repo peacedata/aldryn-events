@@ -1,30 +1,24 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse
 from django.utils.translation import (
     ugettext_lazy as _,
     get_language_from_request,
 )
-
 from aldryn_apphooks_config.utils import get_app_instance
-from aldryn_translation_tools.utils import (
-    get_object_from_request,
-)
+from parler.models import TranslatableModel
 from cms.toolbar_pool import toolbar_pool
 from cms.toolbar_base import CMSToolbar
 from cms.utils.i18n import force_language
 from cms.utils.urlutils import admin_reverse
-
 from .models import Event
 from .cms_appconfig import EventsConfig
 
 
 @toolbar_pool.register
 class EventsToolbar(CMSToolbar):
-
     def get_on_delete_redirect_url(self, event):
         language = getattr(
             self, 'current_lang', get_language_from_request(
@@ -45,13 +39,47 @@ class EventsToolbar(CMSToolbar):
 
         return config
 
+    @staticmethod
+    def _get_object_from_request(model, request,
+                                pk_url_kwarg='pk',
+                                slug_url_kwarg='slug',
+                                slug_field='slug'):
+        """
+        Given a model and the request, try to extract and return an object
+        from an available 'pk' or 'slug', or return None.
+
+        Note that no checking is done that the obj's kwargs really are for objects
+        matching the provided model (how would it?) so use only where appropriate.
+        """
+        language = get_language_from_request(request, check_path=True)
+        kwargs = request.resolver_match.kwargs
+        mgr = model.objects
+        if pk_url_kwarg in kwargs:
+            return mgr.filter(pk=kwargs[pk_url_kwarg]).first()
+        elif slug_url_kwarg in kwargs:
+            # If the model is translatable, and the given slug is a translated
+            # field, then find it the Parler way.
+            filter_kwargs = {slug_field: kwargs[slug_url_kwarg]}
+            try:
+                translated_fields = model._parler_meta.get_translated_fields()
+            except AttributeError:
+                translated_fields = []
+            if (issubclass(model, TranslatableModel) and
+                        slug_url_kwarg in translated_fields):
+                return mgr.active_translations(language, **filter_kwargs).first()
+            else:
+                # OK, do it the normal way.
+                return mgr.filter(**filter_kwargs).first()
+        else:
+            return None
+
     def populate(self):
         config = self.get_app_config(EventsConfig)
 
         if not config:
             return
 
-        event = get_object_from_request(Event, self.request)
+        event = self._get_object_from_request(Event, self.request)
 
         if self.request.user:
             user = self.request.user

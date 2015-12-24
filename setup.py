@@ -14,9 +14,7 @@ if not py26 and not py27:
 
 REQUIREMENTS = [
     'aldryn-apphooks-config>=0.1.4',
-    'aldryn-boilerplates',
     'aldryn-common>=0.0.6',
-    'aldryn-translation-tools>=0.2.1',
     'aldryn-reversion>=1.0.0,<1.1.0',
     'django-appconf',
     'django-appdata<0.2',
