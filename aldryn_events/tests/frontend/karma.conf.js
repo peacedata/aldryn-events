@@ -55,7 +55,7 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            '../../aldryn_events/boilerplates/bootstrap3/static/js/addons/*.js': ['coverage'],
+            '../../aldryn_events/static/js/addons/*.js': ['coverage'],
             // for fixtures
             '**/*.html': ['html2js'],
             '**/*.json': ['json_fixtures']

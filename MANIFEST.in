@@ -1,5 +1,4 @@
 include LICENSE.txt
 recursive-include aldryn_events/locale *
 recursive-include aldryn_events/migrations *
-recursive-include aldryn_events/boilerplates *
 recursive-exclude * *.pyc

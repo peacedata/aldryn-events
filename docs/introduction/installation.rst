@@ -54,54 +54,6 @@ listed in ``INSTALLED_APPS``, *after* ``'cms'``.
    Python 2.6 and Django 1.6.
 
 
-Aldryn Boilerplates
-===================
-
-This application uses (and will install) `Aldryn Boilerplates <https://github.com/aldryn/aldryn-boilerplates>`_,
-which requires some basic configuration to get you started.
-
-.. note::
-
-    If you are using Django 1.8 please note the `configuration instructions for Aldryn Boilerplates
-    <https://github.com/aldryn/aldryn-boilerplates#django-18>`_.
-
-Edit your settings so that they conform to::
-
-    TEMPLATE_CONTEXT_PROCESSORS = [
-        ...
-        'aldryn_boilerplates.context_processors.boilerplate',
-        ...
-    ]
-
-    STATICFILES_FINDERS = [
-        'django.contrib.staticfiles.finders.FileSystemFinder',
-        # important - place immediately before AppDirectoriesFinder
-        'aldryn_boilerplates.staticfile_finders.AppDirectoriesFinder',
-        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    ]
-
-    TEMPLATE_LOADERS = [
-        'django.template.loaders.filesystem.Loader',
-        # important! place right before django.template.loaders.app_directories.Loader
-        'aldryn_boilerplates.template_loaders.AppDirectoriesLoader',
-        'django.template.loaders.app_directories.Loader',
-    ]
-
-Now set the name of the boilerplate you'll use in your project::
-
-    ALDRYN_BOILERPLATE_NAME = 'bootstrap3'
-
-.. note::
-   Note that Aldryn Events doesn't use the the traditional Django ``/templates`` and ``/static
-   directories``. Instead, it employs `Aldryn Boilerplates
-   <https://github.com/aldryn/aldryn-boilerplates>`_, which makes it possible to to support
-   multiple different frontend schemes ('Boilerplates')and switch between them without the need for
-   project-by-project file overwriting.
-
-   Aldryn Events's templates and static files will be found in named directories in the
-   ``/boilerplates`` directory.
-
-
 Filer
 =====
 
