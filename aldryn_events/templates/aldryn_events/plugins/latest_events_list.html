@@ -1,0 +1,23 @@
+{% load i18n %}
+{% if ongoing_events %}
+    <div class="media">
+        <div class="media__text">
+            <h3>{% trans "Today's events" %}</h3>
+            {% for event in ongoing_events %}
+                <div class="media__date">{{ event.start_date|date:"F d, o" }}</div>
+                <a href="{{ event.get_absolute_url }}" class="media__content">{{ event.title }}</a>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+{% if upcoming_events %}
+    <div class="media">
+        <div class="media__text">
+            <h3>{% trans "UPCOMING EVENTS" %}</h3>
+            {% for event in upcoming_events %}
+                <div class="media__date">{{ event.start_date|date:"F d, o" }}</div>
+                <a href="{{ event.get_absolute_url }}" class="media__content">{{ event.title }}</a>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
