@@ -1,5 +1,6 @@
 import datetime
 
+from django.core.urlresolvers import reverse, NoReverseMatch
 from django.utils import timezone
 from django.utils.dates import MONTHS
 from django.utils.translation import (
@@ -19,7 +20,8 @@ from .utils import (
     get_valid_languages,
 )
 from .models import (
-    UpcomingPluginItem, Event, EventListPlugin, EventCalendarPlugin
+    UpcomingPluginItem, Event, EventListPlugin, EventCalendarPlugin,
+    LatestEventsPluginModel
 )
 
 from .forms import (
@@ -164,3 +166,41 @@ class CalendarPlugin(NameSpaceCheckMixin, CMSPluginBase):
         return context
 
 plugin_pool.register_plugin(CalendarPlugin)
+
+
+class LatestEventsPlugin(CMSPluginBase):
+    render_template = "plugins/latest_events_list.html"
+    name = _('Latest Events')
+    module = _('Events')
+    model = LatestEventsPluginModel
+
+    def render(self, context, instance, placeholder):
+        language = get_language_from_request(context['request'],
+                                             check_path=True)
+        namespace = instance.app_config_id and instance.app_config.namespace
+        context['instance'] = instance
+
+        try:
+            reverse('{0}:events_list'.format(namespace))
+        except (NoReverseMatch, AttributeError):
+            context['plugin_configuration_error'] = NO_APPHOOK_ERROR_MESSAGE
+            return context
+
+        events = (Event.objects.namespace(namespace)
+                               .active_translations(language)
+                               .language(language))
+
+        ongoing_events = list(
+            events.ongoing()[:instance.total_count]
+        )
+
+        if len(ongoing_events) < instance.total_count:
+            context['upcoming_events'] = list(
+                events.upcoming(count=(instance.total_count - len(ongoing_events)))
+            )
+
+        context['ongoing_events'] = ongoing_events
+
+        return context
+
+plugin_pool.register_plugin(LatestEventsPlugin)

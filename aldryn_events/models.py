@@ -453,3 +453,14 @@ class EventCalendarPlugin(BaseEventPlugin):
 
     def __str__(self):
         return force_text(self.pk)
+
+
+@python_2_unicode_compatible
+class LatestEventsPluginModel(BaseEventPlugin):
+    total_count = models.PositiveIntegerField(
+        default= 3,
+        help_text=_("Maximum count of events to display.")
+    )
+
+    def __str__(self):
+        return '{0} latest events'.format(self.total_count)

@@ -288,8 +288,14 @@ class EventDatesView(AppConfigMixin, TemplateView):
         )
         return ctx
 
+
+class AjaxEventListView(EventListView):
+    template_name = 'aldryn_events/includes/events_list.html'
+
+
 event_dates = EventDatesView.as_view()
 event_detail = EventDetailView.as_view()
 event_list = EventListView.as_view()
+event_list_ajax = AjaxEventListView.as_view()
 event_list_archive = EventListView.as_view(archive=True)
 reset_event_registration = ResetEventRegistration.as_view()
