@@ -169,7 +169,7 @@ plugin_pool.register_plugin(CalendarPlugin)
 
 
 class LatestEventsPlugin(CMSPluginBase):
-    render_template = "plugins/latest_events_list.html"
+    render_template = "aldryn_events/plugins/latest_events_list.html"
     name = _('Latest Events')
     module = _('Events')
     model = LatestEventsPluginModel
