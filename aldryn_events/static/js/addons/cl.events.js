@@ -23,7 +23,7 @@ var Cl = window.Cl || {};
             });
         },
 
-        _handler: function (e) {
+        _prev_next_handler: function (e) {
             e.preventDefault();
             var calendar = $(this).closest('.events-calendar');
             var settings = calendar.data();
@@ -31,7 +31,7 @@ var Cl = window.Cl || {};
             var table = calendar.find('.table-calendar');
             var month = parseInt(table.data('month-numeric'));
             var year = parseInt(table.data('year'));
-            var title = calendar.find('h3');
+            var title = calendar.find('.datepicker-title');
 
             // cancel if no direction is provided
             if (!direction) {
@@ -67,16 +67,42 @@ var Cl = window.Cl || {};
                 'error': function () {
                     alert(settings.error);
                 }
+            }).then(function(){
+                bindAnchorListeners(calendar);
+            });
+        },
+
+        _popup_list_handler: function (e) {
+            e.preventDefault();
+            var calendar = $(this).closest('.events-calendar');
+            var settings = calendar.data();
+            var anchorData = $(this).data();
+
+            // send proper ajax request
+            $.ajax({
+                'type': 'get',
+                'url': anchorData.listurl + '?plugin_pk=' + settings.pk,
+                'success': function (data) {
+                    alert(data);
+                },
+                'error': function () {
+                    alert(settings.error);
+                }
             });
         },
 
         // INFO: handle calendar
         calendar: function (calendar) {
             // attach events
-            calendar.on('click', '.controls .js-trigger', this._handler);
+            calendar.on('click', '.controls .js-trigger', this._prev_next_handler);
+            bindAnchorListeners(calendar);
         }
 
     };
+
+    function bindAnchorListeners(calendar){
+        calendar.find('.table-calendar').find('td.events a[data-ajax="true"]').on('click', Cl.events._popup_list_handler);
+    }
 
     // autoload
     if ($('.js-events-calendar').length) {

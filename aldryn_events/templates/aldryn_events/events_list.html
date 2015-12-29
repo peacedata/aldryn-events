@@ -18,17 +18,7 @@
 
     {# INFO: show upcoming events #}
     {% render_placeholder view.config.placeholder_events_list_top %}
-    <div class="aldryn-events-list">
-        {% regroup page_obj.object_list|default:object_list by start_date as event_list_grouped %}
-        {% for ev_group in event_list_grouped %}
-            <h2>{{ ev_group.grouper|date:"l, j F o" }}</h2>
-            {% for event in ev_group.list %}
-                {% include "aldryn_events/includes/event.html" with is_upcoming_events="true" %}
-            {% endfor %}
-        {% empty %}
-            <p class="well">{% trans "No items available" %}</p>
-        {% endfor %}
-    </div>
+    {% include "aldryn_events/includes/events_list.html" %}
     {% render_placeholder view.config.placeholder_events_list_bottom %}
 
     <div class="aldryn-events-pagination">
