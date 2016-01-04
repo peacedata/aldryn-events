@@ -21,3 +21,14 @@
         </div>
     </div>
 {% endif %}
+{% if latest_events %}
+    <div class="media">
+        <div class="media__text">
+            <h3>{% trans "Latest events" %}</h3>
+            {% for event in latest_events %}
+                <div class="media__date">{{ event.start_date|date:"F d, o" }}</div>
+                <a href="{{ event.get_absolute_url }}" class="media__content">{{ event.title }}</a>
+            {% endfor %}
+        </div>
+    </div>
+{% enif %}

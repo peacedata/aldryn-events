@@ -195,9 +195,13 @@ class LatestEventsPlugin(CMSPluginBase):
         )
 
         if len(ongoing_events) < instance.total_count:
-            context['upcoming_events'] = list(
-                events.upcoming(count=(instance.total_count - len(ongoing_events)))
-            )
+            now = timezone.now()
+            context['upcoming_events'] = list(events.future(now=now).exclude(
+                pk=ongoing_events
+            )[:(instance.total_count - len(ongoing_events))])
+
+        if not (len(context.get('upcoming_events', ())) + len(ongoing_events)):
+            context['latest_events'] = events.past(count=instance.total_count)
 
         context['ongoing_events'] = ongoing_events
 
