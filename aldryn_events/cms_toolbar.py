@@ -76,9 +76,6 @@ class EventsToolbar(CMSToolbar):
     def populate(self):
         config = self.get_app_config(EventsConfig)
 
-        if not config:
-            return
-
         event = self._get_object_from_request(Event, self.request)
 
         if self.request.user:
@@ -98,7 +95,7 @@ class EventsToolbar(CMSToolbar):
                 menu = self.toolbar.get_or_create_menu(
                     'events-app', _('Events'))
 
-                if chg_config_perm:
+                if chg_config_perm and config:
                     url = admin_reverse('aldryn_events_eventsconfig_change',
                                         args=[config.pk, ])
                     menu.add_modal_item(_('Edit App Configuration'), url=url)
